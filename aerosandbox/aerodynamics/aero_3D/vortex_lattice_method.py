@@ -162,6 +162,25 @@ class VortexLatticeMethod(ExplicitAnalysis):
 
         gamma = np.linalg.solve(AIC, -freestream_influences)
 
+        tu, tv, tw = calculate_induced_velocity_horseshoe(
+            x_field=wide(collocation_points[:, 0]),
+            y_field=wide(collocation_points[:, 1]),
+            z_field=wide(collocation_points[:, 2]),
+            x_left=tall(left_vortex_vertices[:, 0]),
+            y_left=tall(left_vortex_vertices[:, 1]),
+            z_left=tall(left_vortex_vertices[:, 2]),
+            x_right=tall(right_vortex_vertices[:, 0]),
+            y_right=tall(right_vortex_vertices[:, 1]),
+            z_right=tall(right_vortex_vertices[:, 2]),
+            trailing_vortex_direction=steady_freestream_direction,
+            gamma=np.eye(collocation_points.shape[0]),
+        )
+        tx1 = np.sum(tu, axis=1) * gamma
+        ty1 = np.sum(tv, axis=1) * gamma
+        tz1 = np.sum(tw, axis=1) * gamma
+        vels2 = np.stack((tx1, ty1, tz1)).T
+        vels3 = vels2 + freestream_velocities
+
         ##### Calculate forces
         ### Calculate Near-Field Forces and Moments
         # Governing Equation: The force on a straight, small vortex filament is F = rho * V p l * gamma,
@@ -182,7 +201,7 @@ class VortexLatticeMethod(ExplicitAnalysis):
             y_right=tall(right_vortex_vertices[:, 1]),
             z_right=tall(right_vortex_vertices[:, 2]),
             trailing_vortex_direction=steady_freestream_direction,
-            gamma=gamma,
+            gamma=np.eye(collocation_points.shape[0]),
         )
         u_centers_induced = np.sum(u_centers_induced, axis=1)
         v_centers_induced = np.sum(v_centers_induced, axis=1)

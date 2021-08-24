@@ -21,11 +21,9 @@ def test_flat_plate():
     from aerosandbox.aerodynamics.aero_3D.test_aero_3D.geometries.flat_plate import airplane
     analysis = asb.VortexLatticeMethod(
         airplane=airplane,
-        op_point=asb.OperatingPoint(alpha=10),
+        op_point=asb.OperatingPoint(alpha=0),
         spanwise_resolution=10,
-        # spanwise_spacing="uniform",
         chordwise_resolution=10,
-        # chordwise_spacing="uniform"
     )
     return analysis.run()
 
