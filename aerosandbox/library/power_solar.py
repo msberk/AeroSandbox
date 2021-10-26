@@ -324,7 +324,7 @@ def solar_flux_on_angle(
     S_angle =  S_horz * np.sind(solar_elevation_angle(latitude, day_of_year, time) + 90 - angle) / np.fmax(np.sind(solar_elevation_angle(latitude, day_of_year, time)), 0.0000001)
     return S_angle
 
-def solar_flux_circlular_flight_path(
+def solar_flux_circular_flight_path(
         latitude: float,
         day_of_year: float,
         time: float, 
@@ -423,7 +423,7 @@ if __name__ == "__main__":
         # solar_flux_on_vertical_panel_b = solar_flux_outside_atmosphere_normal(day_of_year) * incidence_angle_function_new(latitude, day_of_year, time, heading+180, angle)
         # solar_flux_on_vertical_panel = solar_flux_on_vertical_panel_a + solar_flux_on_vertical_panel_b
         # solar_flux.append(solar_flux_on_vertical_panel)
-        solar_flux.append(solar_flux_circlular_flight_path(latitude, day_of_year, time, -angle, speed, radius) + solar_flux_circlular_flight_path(latitude, day_of_year, time, angle, speed, radius) )
+        solar_flux.append(solar_flux_circular_flight_path(latitude, day_of_year, time, -angle, radius,  speed * time) + solar_flux_circular_flight_path(latitude, day_of_year, time, angle, radius, speed * time) )
 
     fig, ax = plt.subplots(1, 1, figsize=(6.4, 4.8), dpi=200)
     plt.plot(times / 3600, solar_flux)
